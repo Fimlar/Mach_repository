@@ -10,7 +10,7 @@ namespace Spojovy_seznam
     {
         static void Main(string[] args)
         {
-            Node uzlik = new Node(8);
+            Node uzlik = new Node(8);          
             
         }
     }
@@ -52,7 +52,15 @@ namespace Spojovy_seznam
         }
         public int Min()
         {
-
+            int min = Head.Next.Value;
+            Node node = Head;
+            while (node != null)
+            {
+                if (node.Value < min)
+                    min = node.Value;
+                node = node.Next;
+            }
+            return min;
         }
     }
 }
