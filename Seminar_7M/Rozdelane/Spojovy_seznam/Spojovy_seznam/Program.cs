@@ -50,5 +50,9 @@ namespace Spojovy_seznam
             }
             return false;
         }
+        public int Min()
+        {
+
+        }
     }
 }
