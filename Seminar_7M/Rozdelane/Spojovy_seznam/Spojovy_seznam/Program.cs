@@ -26,7 +26,7 @@ namespace Spojovy_seznam
     class LinkedList
     {
         public Node Head { get; set; }
-        public void Add(int value)  //přidat prvek do seznamu
+        public void Add(int value)  //přidat prvek do seznamu; časová složitost je O(1)
         {
             if (Head == null)   //když je seznam prázdný
             {
@@ -39,7 +39,7 @@ namespace Spojovy_seznam
                 Head = newNode;
             }
         }
-        public bool Find(int value)
+        public bool Find(int value) //časová složitost je O(n), jelikož musíme projít celý seznam
         {
             Node node = Head;
             while (node != null)   //dokud nedojedeme na konec seznamu
@@ -50,7 +50,7 @@ namespace Spojovy_seznam
             }
             return false;
         }
-        public int Min()
+        public int Min()    //opět časová složitost O(n), protože zase musíme projít celý seznam
         {
             int min = Head.Next.Value;
             Node node = Head;
