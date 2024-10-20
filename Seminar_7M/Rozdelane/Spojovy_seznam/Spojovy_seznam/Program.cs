@@ -11,7 +11,7 @@ namespace Spojovy_seznam
         static void Main(string[] args)
         {
             Node uzlik = new Node(8);          
-            
+            LinkedList list = new LinkedList();
         }
     }
     class Node
