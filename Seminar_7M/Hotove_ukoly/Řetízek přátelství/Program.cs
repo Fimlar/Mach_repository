@@ -14,13 +14,13 @@ namespace Řetízek_přátelství
             // časová složitost je také O(n*n), protože při prohledávání do šířky musíme projít pro každý z n vrcholů jeho maximálně n-1 sousedů
             Console.WriteLine("Zadejte počet vrcholů:");    //vytvoření matice sousednosti
             int n = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Zadejte hrany ve formátu \"0-1 1-2\" atd.:");
+            Console.WriteLine("Zadejte hrany ve formátu:");
             bool[,] matrix = MatrixInput(n);
 
             Console.WriteLine("Zadejte počáteční vrchol:");     //nahrání startu a cíle
-            int start = Convert.ToInt32(Console.ReadLine());
+            int start = Convert.ToInt32(Console.ReadLine())-1;
             Console.WriteLine("Zadejte cílový vrchol:");
-            int end = Convert.ToInt32(Console.ReadLine());
+            int end = Convert.ToInt32(Console.ReadLine())-1;
 
             List<int> path = BFS(matrix, start, end, n);    //najití cesty
 
@@ -29,7 +29,7 @@ namespace Řetízek_přátelství
                 Console.WriteLine("Nejkratší cesta:");
                 foreach (int vertex in path)
                 {
-                    Console.Write(vertex + " ");
+                    Console.Write(vertex + 1 + " ");
                 }
             }
             else
