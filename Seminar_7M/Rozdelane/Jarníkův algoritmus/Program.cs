@@ -10,11 +10,22 @@ namespace Jarníkův_algoritmus
     {
         static void Main(string[] args)
         {
+            //Načtu počet vrcholů
             Console.WriteLine("Zadejte počet řádků matice:");
             int n = int.Parse(Console.ReadLine());
+
+            //Načtu matici
             int[][] matrix = ReadMatrix(n);
-            Array distances = new int[n];
-            
+
+            //Udělám list vzdáleností a nastavím je na nekonečno
+            int[] distances = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                distances[i] = int.MaxValue;
+            }
+
+
+
             Console.Read();
         }
         static int[][] ReadMatrix(int n)
