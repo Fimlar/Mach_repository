@@ -21,7 +21,7 @@ namespace Connect_5
             string name2 = Console.ReadLine();
 
             //3d array: 2d hrací pole a pro každé pole počet spojitých horizontálně, vertikálně a obě diagonály
-            int[,,] board = new int[height, width, 5];
+            int[,] board = new int[height, width];
 
             
 
@@ -34,7 +34,7 @@ namespace Connect_5
                 Turn(board, width, height, 2);
             }
         }
-        static void PrintMatrix(int[,,] matrix)
+        static void PrintMatrix(int[,] matrix)
         {
             int rows = matrix.GetLength(0);
             int cols = matrix.GetLength(1);
@@ -42,14 +42,14 @@ namespace Connect_5
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    Console.Write(matrix[i, j, 0]);
+                    Console.Write(matrix[i, j]);
                     if (j < cols - 1)
                         Console.Write(" ");
                 }
                 Console.WriteLine();
             }
         }
-        static int[,,] Turn(int[,,] board, int width, int height, int player)
+        static int[,] Turn(int[,] board, int width, int height, int player)
         {
             //error prevention
             int col;
@@ -62,7 +62,7 @@ namespace Connect_5
                     continue;
                 }
                     
-                if (board[0, col, 0] != 0)
+                if (board[0, col] != 0)
                 {
                     Console.WriteLine("Toto pole je zabrané");
                     continue;
@@ -75,22 +75,59 @@ namespace Connect_5
                 //dávám naspod
                 if (i == height - 1)
                 {
-                    board[i, col, 0] = player;
+                    board[i, col] = player;
                     break;
                 }
                    
                 //dávám nad najitý
-                if (board[i + 1, col, 0] == 0)
+                if (board[i + 1, col] == 0)
                     continue;
                 else
                 {
-                    board[i, col, 0] = player;
+                    board[i, col] = player;
                     break;
                 }
             }
 
             PrintMatrix(board);
             return board;
+        }
+
+        static bool Check(int[,] board, int winCount, int player, (int, int) pozition)
+        {
+            return CheckRow(board, winCount, player, pozition) || CheckColumn(board, winCount, player, pozition) || CheckDiagonal(board, winCount, player, pozition);
+        }
+        static bool CheckRow(int[,] board, int winCount, int player, (int, int) pozition)
+        {
+            int x = pozition.Item1;
+            int y = pozition.Item2;
+            int count = 0;
+            for (int i = -winCount+1; i < winCount-1; i++)
+            {
+                if (count == winCount)
+                    return true;
+                try
+                {
+                    if (board[x + i, y] == player)
+                        count++;
+
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+                
+            }
+
+            return false;
+        }
+        static bool CheckColumn(int[,] board, int winCount, int player, (int, int) pozition)
+        {
+            return true;
+        }
+        static bool CheckDiagonal(int[,] board, int winCount, int player, (int, int) pozition)
+        {
+            return true;
         }
     }
 }
