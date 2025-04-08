@@ -68,21 +68,30 @@ namespace Connect_5
             int col;
             while (true)
             {
-                col = Convert.ToInt32(Console.ReadLine());
-                if (0 > col || col >= width)
+                Console.Write("Zadej číslo sloupce: ");
+                string input = Console.ReadLine();
+
+                if (!int.TryParse(input, out col))
                 {
                     Console.WriteLine("Zadej platné číslo sloupce");
                     continue;
                 }
-                    
+
+                if (col < 0 || col >= width)
+                {
+                    Console.WriteLine("Zadej platné číslo sloupce");
+                    continue;
+                }
+
                 if (board[0, col] != 0)
                 {
                     Console.WriteLine("Toto pole je zabrané");
                     continue;
-                }  
+                }
+
                 break;
             }
-            
+
             for (int i = 0; i < height; i++)
             {
                 //dávám naspod
