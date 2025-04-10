@@ -9,6 +9,11 @@ using System.IO;
 
 namespace Connect4
 {
+    // Tento kód je dělaný podle tutoriálu na vytvoření Connect 4 solveru viz http://blog.gamesolver.org/solving-connect-four/01-introduction/
+    // Funkce Negamax a AplhaBeta jsou přímo upravené jeho funkce, ostatní je více či méně inspirované
+    // Vše v Program.cs je zcela originální
+
+
     /// <summary>
     /// Třída, která uchovává hrací pole
     /// </summary>
@@ -33,7 +38,7 @@ namespace Connect4
         /// </summary>
         public int HEIGHT { get; private set; }
         public int WIDTH { get; private set; }
-        public int winCount { get; private set; }
+        public int winCount { get; set; }
 
         private int[,] board;       // Hrací pole   
         private int[] height;       // Pole s výškou každého sloupce
@@ -60,7 +65,7 @@ namespace Connect4
         /// Konstruktor, který zkopíruje zadanou pozici
         /// </summary>
         /// <param name="P">Zadaná pozice</param>
-        public Position(Position P)
+        public Position(Position P)                             // Není zde potřeba, ovšem hodí se lol
         {
             WIDTH = P.WIDTH;
             HEIGHT = P.HEIGHT;
@@ -157,31 +162,26 @@ namespace Connect4
         /// <returns>true: v tomto směru je výhra; false: v tomto směru není výhra</returns>
         public bool CheckDirection(int col, int row, int dRow, int dCol, int currentPlayer)
         {
-            int count = 1; // začínáme s 1, protože aktuální tah je už na pozici (col, row)
+            int count = 1; // Začínáme s 1, protože aktuální tah je už na pozici (col, row)
 
             // Zkontrolujeme oba směry (pozitivní a negativní směr)
             for (int j = -1; j < 2; j+=2)
             {
-                for (int i = 1; i < winCount; i++) // počítáme od 1, protože pozice (col, row) už je zahrnuta
+                for (int i = 1; i < winCount; i++)      // Počítáme od 1, protože pozice (col, row) už je zahrnuta
                 {
-                    int newRow = row + i * dRow * j;  // nový řádek
-                    int newCol = col + i * dCol * j;  // nový sloupec
+                    int newRow = row + i * dRow * j;    // Nový řádek
+                    int newCol = col + i * dCol * j;    // Nový sloupec
                     if (newRow < 0 || newRow >= HEIGHT || newCol < 0 || newCol >= WIDTH || board[newCol, newRow] != currentPlayer)
-                        break; // pokud je mimo hranice nebo hodnoty se liší, přerušíme kontrolu
-                    count++; // přidáme 1 k počtu propojených žetonů
+                        break;      // Pokud je mimo hranice nebo hodnoty se liší, přerušíme kontrolu
+                    count++;        // Přidáme 1 k počtu propojených žetonů
                 }
             }
-            return count >= winCount; // pokud je propojeno dostatečně žetonů, hráč vyhrál
+            return count >= winCount;       // Pokud je propojeno dostatečně žetonů, hráč vyhrál
         }
-
-
-
-        
     }
 
     public class Solver
     {
-        private ulong nodeCount;        // Počet prozkoumaných uzlů
         private int[] columnOrder;      // Pořadí, ve kterém se prozkoumávají sloupce
         private int bestCol;
 
@@ -191,7 +191,6 @@ namespace Connect4
         /// <param name="WIDTH">Šířka hracího pole, pro nastavení počtu sloupců</param>
         public Solver(int WIDTH)
         {
-            nodeCount = 0;
             columnOrder = new int[WIDTH];
             bestCol = -1;
 
@@ -207,38 +206,37 @@ namespace Connect4
         /// </summary>
         /// <param name="P"></param>
         /// <returns>skóre pozice, nejlepší tah</returns>
-        public (int, int) Negamax(Position P)
+        public (int, int) Negamax(Position P)                                                           // Tato funkce je zde zbytečná, slouží pouze jako prvotní verze finálního algoritmu
         {
-            int bestCol = -1;
-            nodeCount++;
+            int bestCol = -1;           // Iniciace nejlepšího tahu, který vracíme
 
-            if (P.NbMoves() == P.WIDTH * P.HEIGHT) // Remíza
-                return (0, bestCol);
+            if (P.NbMoves() == P.WIDTH * P.HEIGHT)  // Kontrolujeme remízu
+                return (0, bestCol);                // Pokud nastává remíza, vracíme skóre 0 a nejlepší tah
 
-            for (int i = 0; i < P.WIDTH; i++) // Kontrola, zda může hráč okamžitě vyhrát
-                if (P.CanPlay(i) && P.IsWinningMove(i, 1 + P.NbMoves() % 2))
-                    return ((P.WIDTH * P.HEIGHT + 1 - P.NbMoves()) / 2, bestCol);
+            for (int i = 0; i < P.WIDTH; i++)                                           // Kontrolujeme zda může hráč okamžitě vyhrát
+                if (P.CanPlay(i) && P.IsWinningMove(i, 1 + P.NbMoves() % 2))            // 1 + P.NbMoves() % 2 je symbol momentálně hrajícího hráče (buď 1 nebo 2)
+                    return ((P.WIDTH * P.HEIGHT + 1 - P.NbMoves()) / 2, bestCol);       // Vracíme skóre pozice a nejlepší tah
 
-            int bestScore = -P.WIDTH * P.HEIGHT;
+            int bestScore = -P.WIDTH * P.HEIGHT;        // Nejlepší skóre nastavujeme na nejnižší možnou hodnotu
 
-
+            // Procházíme pole pro každý možný tah pustíme funkci Negamax rekurzivně
             for (int x = 0; x < P.WIDTH; x++)
             { 
-                if (P.CanPlay(x))
+                if (P.CanPlay(x))                               // Kontrolujeme, jestli můžeme tah zahrát
                 {
                     Position P2 = new Position(P);
                     P2.Play(x);
                     //P2.PrintBoard();
-                    int score = -Negamax(P2).Item1;
-                    if (score > bestScore)
+                    int score = -Negamax(P2).Item1;             // Pouštíme rekurzivně na novou pozici se zahraným tahem
+                    
+                    // Uložíme nejlepší skóre a k němu příslušný sloupec
+                    if (score > bestScore)                  
                     {
                         bestScore = score;
                         bestCol = x;
                     }
-
                 }
             }
-
             return (bestScore, bestCol);
         }
 
@@ -252,55 +250,93 @@ namespace Connect4
         /// <returns>Skóre pozice</returns>
         public (int, int) AlphaBeta(Position P, int alpha, int beta)
         {
-            nodeCount++;
+            // Většina stejné jako v Negamaxu, již nekomentuji
+            int localBestCol = -1;
+
             if (P.NbMoves() == P.WIDTH * P.HEIGHT) // Remíza
-                return (0, bestCol);
+                return (0, localBestCol);
 
-            for (int i = 0; i < P.WIDTH; i++) // Kontrola, zda může hráč okamžitě vyhrát
+            for (int i = 0; i < P.WIDTH; i++) // Okamžitá výhra
                 if (P.CanPlay(i) && P.IsWinningMove(i, 1 + P.NbMoves() % 2))
-                {
-                    bestCol = i;
-                    return ((P.WIDTH * P.HEIGHT + 1 - P.NbMoves()) / 2, bestCol);
-                }
-                    
+                    return ((P.WIDTH * P.HEIGHT + 1 - P.NbMoves()) / 2, i);
 
-            int max = (P.WIDTH * P.HEIGHT - 1 - P.NbMoves()) / 2;
+            int max = (P.WIDTH * P.HEIGHT - 1 - P.NbMoves()) / 2;           // Nejlepší skóre nastavujeme na nejnižší možnou hodnotu
 
-            // Není potřeba ponechávat hodnoty mimo interval [alpha;beta]
-            if (beta > max)
+            // Zmenšujeme interval prohledávání
+            if (beta > max)                             
             {
                 beta = max;
                 if (alpha >= beta)
-                    return (beta, bestCol);
+                    return (beta, localBestCol);
             }
 
             for (int x = 0; x < P.WIDTH; x++)
             {
-                if (P.CanPlay(columnOrder[x]))
+                int col = columnOrder[x];               // Procházíme sloupce odprostřed, jelikož je větší šance najít dobrý tah, tudíž využít pruning
+                if (P.CanPlay(col))
                 {
                     Position P2 = new Position(P);
-                    P2.Play(columnOrder[x]);
-                    //P2.PrintBoard();
+                    P2.Play(col);
                     int score = -AlphaBeta(P2, -beta, -alpha).Item1;
-                    if (score >= beta)      // Zmenšíme interval, když najdeme lepší skóre
-                    {
-                        bestCol = columnOrder[x];
-                        return (score, bestCol);
-                    }     
-                        
+
+                    // Tohle moc nechápu, ale prostě zmenšujeme ten interval prohledávání
+                    if (score >= beta)
+                        return (score, col);
+
                     if (score > alpha)
+                    {
                         alpha = score;
+                        localBestCol = col;
+                    }
                 }
             }
-            return (alpha, bestCol);
+            return (alpha, localBestCol);
         }
 
 
-
+        /// <summary>
+        /// Hloupý algoritmus na hraní AI
+        /// </summary>
+        /// <param name="P">Momentální stav hrací plochy</param>
+        /// <returns>true: zahraný tah byl výherní; false: zahraný tah nebyl výherní</returns>
         public bool StupidAIPlay(Position P)
         {
+            // Zabraňuje výhře protihráče
+            P.winCount--;                       // Zmenšujeme winCount o 1, aby se bránílo už když má winCount-2 vedle sebe
+            for (int i = 0; i < P.WIDTH; i++)
+            {
+                if (P.IsWinningMove(i, 2 - P.NbMoves() % 2))            // Pokud má protihráč alespoň winCount-2 vedle sebe, tak ho bráníme
+                {                                                       // 2 - P.NbMoves() % 2 nastavuje kontrolovaného hráče na protihráče
+                    P.Play(i);
+                    P.PrintBoard();
+                    P.winCount++;
+                    return false;
+                }
+            }
+            P.winCount++;
 
-            return true;
+            // Hledá výhru pro sebe
+            for (int i = 0; i < P.WIDTH; i++)
+            {
+                if (P.IsWinningMove(i, 1 + P.NbMoves() % 2))
+                {
+                    P.Play(i);
+                    P.PrintBoard();
+                    return true;
+                }
+            }
+
+            // Hraje do sloupce s prioritou podle columnOrder
+            for (int x = 0; x < P.WIDTH; x++)
+            {
+                if (P.CanPlay(columnOrder[x]))
+                {
+                    P.Play(columnOrder[x]);
+                    P.PrintBoard();
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }
