@@ -112,6 +112,8 @@ namespace Connect4
             Solver solver = new Solver(P.WIDTH);        // Iniciace objektu solver třídy Solver
             int bestCol;                                // Deklarování proměnné vracené funkcí AlphaBeta
 
+            P.PrintBoard();         // Tiskneme pole pro přehlednost pro uživatele
+
             // Opakujeme, dokud někdo nevyhraje, nebo není remíza 
             while (true)
             {
@@ -121,6 +123,7 @@ namespace Connect4
                     Console.WriteLine("Hra skončila remízou.");
                     return;
                 }
+                //Console.WriteLine(P.NbMoves());
 
                 // Zjišťuje, jestli je na řadě člověk nebo AI. Záleží na tom kdo začíná
                 if (startDecision % 2 == 1)
@@ -188,6 +191,8 @@ namespace Connect4
             string name2 = Console.ReadLine();
 
             Console.WriteLine("Sloupce se číslují zleva od čísla 1.");
+
+            P.PrintBoard();         // Tiskneme pole pro přehlednost pro uživatele
 
             // Hrajeme dokud někdo nevyhraje, nebo hra neskončí remízou
             while (true)

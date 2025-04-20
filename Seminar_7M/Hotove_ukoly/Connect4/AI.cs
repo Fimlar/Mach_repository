@@ -301,7 +301,31 @@ namespace Connect4
         /// <returns>true: zahraný tah byl výherní; false: zahraný tah nebyl výherní</returns>
         public bool StupidAIPlay(Position P)
         {
-            // Zabraňuje výhře protihráče
+            // Hledá výhru pro sebe
+            for (int i = 0; i < P.WIDTH; i++)
+            {
+                if (P.IsWinningMove(i, 1 + P.NbMoves() % 2))
+                {
+                    P.Play(i);
+                    P.PrintBoard();
+                    return true;
+                }
+            }
+
+            // Hraje aby zablokoval protihráčovy 3 kameny
+            // Je to kvůli tomu, aby alg nenašel jako první 2 sousední kameny a poté nechal hráče vyhrát někde kam nedošel
+            for (int i = 0; i < P.WIDTH; i++)
+            {
+                if (P.IsWinningMove(i, 2 - P.NbMoves() % 2))            
+                {                                                       
+                    P.Play(i);
+                    P.PrintBoard();
+                    P.winCount++;
+                    return false;
+                }
+            }
+
+            // Hraje aby zablokoval protihráčovy 2 kameny
             P.winCount--;                       // Zmenšujeme winCount o 1, aby se bránílo už když má winCount-2 vedle sebe
             for (int i = 0; i < P.WIDTH; i++)
             {
@@ -314,17 +338,6 @@ namespace Connect4
                 }
             }
             P.winCount++;
-
-            // Hledá výhru pro sebe
-            for (int i = 0; i < P.WIDTH; i++)
-            {
-                if (P.IsWinningMove(i, 1 + P.NbMoves() % 2))
-                {
-                    P.Play(i);
-                    P.PrintBoard();
-                    return true;
-                }
-            }
 
             // Hraje do sloupce s prioritou podle columnOrder
             for (int x = 0; x < P.WIDTH; x++)
