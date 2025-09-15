@@ -16,20 +16,51 @@ namespace BeastInLabyrinth
             Labyrinth lab = new Labyrinth(width, height);
 
             lab.LabInput();
-            lab.Print();
+            Console.WriteLine();
+
+            for (int i = 1; i <= 20; i++)
+            {
+                lab.Turn();
+                Console.WriteLine($"{i}. krok");
+                PrintLabyrinth(lab, lab.labyrinth, lab.beast);
+            }
 
             Console.ReadLine();
         }
+
+        static void PrintLabyrinth(Labyrinth lab, char[,] matrix, Beast beast)
+        {
+            for (int i = 0; i < lab.Height; i++)
+            {
+                for (int j = 0; j < lab.Width; j++)
+                {
+                    if (i == beast.Y && j == beast.X)
+                    {
+                        Console.Write(beast.Shape);
+                        continue;
+                    }
+                    Console.Write(matrix[j, i]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
     }
+    /// <summary>
+    /// Třída popisující pole labyrintu
+    /// </summary>
     class Labyrinth
     {
         public int Width { get; }
         public int Height { get; }
-        private char[,] labyrinth;
-        private int x;
-        private int y;
-        private int[] orientation = new int[2];
-        private int[] right = new int[2];
+        public char[,] labyrinth;
+        public Beast beast;
+
+        /// <summary>
+        /// Konstruktor třídy Labyrinth
+        /// </summary>
+        /// <param name="width">Šířka pole</param>
+        /// <param name="height">Výška pole</param>
         public Labyrinth(int width, int height)
         {
             Width = width;
@@ -37,79 +68,165 @@ namespace BeastInLabyrinth
             labyrinth = new char[Width, Height];
         }
 
+        /// <summary>
+        /// Metoda pro nahrání pole
+        /// </summary>
         public void LabInput()
         {
             for (int i = 0; i < Height; i++)
             {
+                // Řádek na vstupu
                 string input = Console.ReadLine();
                 for (int j = 0; j < input.Length; j++)
                 {
-                    if (OrientationSet(input[j]))
+                    // Pokud není momentální znak zeď ani mezera, nastavím objekt beast se souřadnicemi tohoto znaku
+                    if (input[j] != 'X' && input[j] != '.')
                     {
-                        x = j;
-                        y = i;
+                        beast = new Beast(input[j], j, i);
+                        // Na místo příšery dám mezeru
+                        labyrinth[j, i] = '.';
+                        continue;
                     }
                     labyrinth[j, i] = input[j];
                 }
             }
         }
 
-        public void Print()
-        {
-            for (int i = 0; i < Height; i++)
-            {
-                for (int j = 0; j < Width; j++)
-                {
-                    Console.Write(labyrinth[j, i] + " ");
-                }
-                Console.WriteLine();
-            }
-        }
-
-        private bool OrientationSet(char c)
-        {
-            switch (c)
-            {
-                case '<':
-                    orientation[0] = -1;
-                    orientation[1] = 0;
-                    right[0] = 0;
-                    right[1] = 1;
-                    return true;
-                case '^':
-                    orientation[0] = 0;
-                    orientation[1] = -1;
-                    right[0] = 1;
-                    right[1] = 0;
-                    return true;
-                case '>':
-                    orientation[0] = 1;
-                    orientation[1] = 0;
-                    right[0] = 0;
-                    right[1] = 1;
-                    return true;
-                case 'v':
-                    orientation[0] = 0;
-                    orientation[1] = 1;
-                    right[0] = -1;
-                    right[1] = 0;
-                    return true;
-                default:
-                return false;
-            }
-        }
-
+        /// <summary>
+        /// Metoda, která vykoná příslušný tah
+        /// </summary>
         public void Turn()
         {
+            // Když vpravo není zeď
+            if (!beast.IsToRight(labyrinth))
+                // Pokud je vpravo přede mnou poslední zeď, od které jsem odešel, posunu se k ní (dopředu)
+                // Tahle podmínka je potřeba pro pozici, kdy se potřebuji otočit okolo rohu, takže jsem odešel od té zdi a potřebuji pokračovat podél ní
+                if (beast.IsFrontRightLast(labyrinth))
+                    beast.MoveForward();
+                // Jinak jdu vpřed
+                else
+                    beast.TurnRight();
+            // Pokud je přede mnou stěna, otočím se doleva
+            else if (beast.IsInFront(labyrinth))
+                beast.TurnLeft();
+            else
+                beast.MoveForward();
+        }
+    }
 
+    /// <summary>
+    /// Třída popisující příšeru
+    /// </summary>
+    class Beast
+    {
+        public char Shape {  get; private set; }
+        public int X {  get; private set; }
+        public int Y { get; private set; }
+
+        /// <summary>
+        ///  Souřadnice poslední zdi, od které jsem se posunul vpřed
+        /// </summary>
+        private int[] lastWall = new int[2];
+
+        /// <summary>
+        /// Array všech možných orientací šipky
+        /// </summary>
+        private char[] orientations = new char[4] { '<', '^', '>', 'v' };
+
+        /// <summary>
+        /// List dvojic souřadnic, které ukazují jak se změní souřadnice po kroku vpřed
+        /// </summary>
+        private int[,] forwardMove = new int[,] { { -1,  0 }, {  0, -1 }, {  1,  0 }, {  0, 1 }};
+
+
+        /// <summary>
+        /// Index toho, v jaké pozici v orientations a forwardMove zrovna jsme
+        /// </summary>
+        private int orientIndex = -1;
+
+        /// <summary>
+        /// Konstruktor třídy beast
+        /// </summary>
+        /// <param name="shape">Znak jak je monstrum natočení</param>
+        /// <param name="x">Pozice monstra na ose x</param>
+        /// <param name="y">Pozice monstra na ose y</param>
+        public Beast(char shape, int x, int y)
+        {
+            Shape = shape;
+            X = x;
+            Y = y;
+            orientIndex = Array.IndexOf(orientations, shape);
         }
 
-        private bool RightWall()
+        /// <summary>
+        /// Metoda, která otočí monstrum doleva
+        /// </summary>
+        public void TurnLeft()
         {
-            if (labyrinth[x + right[0], y + right[1]] == 'X')
-            {
-                labyrinth[x, y] = 'X'; // Jsem cooked, potřebuji si pamatovat jak to je otočený nějak líp
-            }
+            // Změním shape na tvar o jedna vlevo od momentálního
+            // orientIndex - 1 nejde, protože prý (-1 % 4) = -1 ???
+            Shape = orientations[(orientIndex + 3) % 4];
+            orientIndex += 3;
+        }   
+
+        /// <summary>
+        /// Metoda, která otočí monstrum doprava
+        /// </summary>
+        public void TurnRight()
+        {
+            Shape = orientations[(orientIndex + 1) % 4];
+            orientIndex++;
+        }
+
+        /// <summary>
+        /// Metoda, která pohne monstrem dopředu
+        /// </summary>
+        public void MoveForward()
+        {
+            // Uložím si souřadnice zdi, kterou mám momentálně vpravo, než od ní odejdu
+            lastWall[0] = (X + forwardMove[(orientIndex + 1) % 4, 0]);
+            lastWall[1] = (Y + forwardMove[(orientIndex + 1) % 4, 1]);
+            X += forwardMove[orientIndex%4, 0];
+            Y += forwardMove[orientIndex%4, 1];
+        }
+
+        /// <summary>
+        /// Funkce, která zkontroluje, jestli je před monstrem v labyrintu zeď
+        /// </summary>
+        /// <param name="lab">Pole labyrintu</param>
+        /// <returns>true pokud je</returns>
+        public bool IsInFront(char[,] lab)
+        {
+            // Triviální
+            if (lab[X + forwardMove[orientIndex % 4, 0], Y + forwardMove[orientIndex % 4, 1]] == 'X')
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Funkce, která zkontroluje, jestli je doprava od monstra v labyrintu zeď
+        /// </summary>
+        /// <param name="lab">Pole labyrintu</param>
+        /// <returns>true pokud je</returns>
+        public bool IsToRight(char[,] lab)
+        {
+            // Když by monstrum otočené o jedna doprava šlo dopředu, dojde na souřadnice zdi vpravo ode mě
+            // Proto přičítám k mým souřadnicím změnu souřadnic následující orientace v seznamu. Pokud tam je zeď, vracím true
+            if (lab[X + forwardMove[(orientIndex+1) % 4, 0], Y + forwardMove[(orientIndex + 1) % 4, 1]] == 'X')
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Funkce, která zkontroluje, jestli se souřadnice o jedna vpravo a dopředu shodují se souřadnicemi poslední opuštěné zdi
+        /// </summary>
+        /// <param name="lab"></param>
+        /// <returns>true, pokud se shodují</returns>
+        public bool IsFrontRightLast(char[,] lab)
+        {
+            // Souřadnice získám tak, že sečtu změny pohybu dopředu a doprava
+            if ((X + forwardMove[orientIndex % 4, 0]) + forwardMove[(orientIndex + 1) % 4, 0] == lastWall[0] && (Y + forwardMove[orientIndex % 4, 1]) + forwardMove[(orientIndex + 1) % 4, 1] == lastWall[1])
+                return true;
             return false;
         }
     }
