@@ -10,11 +10,19 @@ namespace MathFunctionsLibrary
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Interval linearDomain = new Interval(Double.NegativeInfinity, Double.PositiveInfinity, "(", ")");
             Interval linearRange = new Interval(Double.NegativeInfinity, Double.PositiveInfinity, "(", ")");
             Linear f = new Linear("Lineární funkce", "f(x)=3x+5", linearDomain, linearRange, 3, 5);
             Console.WriteLine(f.ToString());
             Console.WriteLine(f.Solve(2));
+
+            Interval fractDomain1 = new Interval(Double.NegativeInfinity, 6.0 / 4.0, "(", ")");
+            Interval fractDomain2 = new Interval(6.0 / 4.0, Double.PositiveInfinity, "(", ")");
+
+            LinearFraction q = new LinearFraction("Lineární lomená funkce", "f(x) = (3x+5)/(6x-4)", fractDomain1, fractDomain2, linearRange, 3, 5, 6, -4);
+            Console.WriteLine(q.ToString());
+            Console.WriteLine(q.Solve(2));
         }
     }
     struct Interval
@@ -75,6 +83,34 @@ namespace MathFunctionsLibrary
         public override double Solve(double x)
         {
             return Slope * x + Intercept;
+        }
+    }
+    class LinearFraction : MathFunction
+    {
+        public double NumeratorSlope { get; private set; }
+        public double NumeratorIntercept { get; private set; }
+        public double DenominatorSlope { get; private set; }
+        public double DenominatorIntercept { get; private set; }
+        Interval Domain2;
+
+        public LinearFraction(string nazev, string description, Interval domain, Interval domain2, Interval range, double numeratorSlope, double numeratorIntercept, double denominatorSlope, double denominatorIntercept) 
+            : base(nazev, description, domain, range)
+        {
+            NumeratorSlope = numeratorSlope;
+            NumeratorIntercept = numeratorIntercept;
+            DenominatorSlope = denominatorSlope;
+            DenominatorIntercept = denominatorIntercept;
+            Domain2 = domain2;
+        }
+
+        public override double Solve(double x)
+        {
+            return (NumeratorSlope * x + NumeratorIntercept)/(DenominatorSlope * x + DenominatorIntercept);
+        }
+
+        public override string ToString()
+        {
+            return $"{Nazev}, {Description}, {Domain.ToString()} U {Domain2.ToString()}, {Range.ToString()}, funkce má hyperbolický průběh";
         }
     }
 }

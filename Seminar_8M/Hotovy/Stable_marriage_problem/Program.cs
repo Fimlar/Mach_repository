@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace perfektni_manzelstvi
+namespace Stable_marriage_problem
 {
     internal class Program
     {
@@ -90,12 +90,12 @@ namespace perfektni_manzelstvi
             {
                 int womanNow = queue.Dequeue();
                 int chosen = women[womanNow, order[womanNow]] - 1;
-                chceMuz(womanNow, chosen);
+                ManWant(womanNow, chosen);
                 order[womanNow] += 1;
             }
         }
 
-        private void chceMuz(int she, int he)
+        private void ManWant(int she, int he)
         {
             for (int i = 0; i < N; i++)
             {
