@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace BeastInLabyrinth
             {
                 lab.Turn();
                 Console.WriteLine($"{i}. krok");
-                PrintLabyrinth(lab, lab.labyrinth, lab.beast);
+                PrintLabyrinth(lab, lab.labyrinth, lab.Beasts);
             }
 
             Console.ReadLine();
@@ -34,18 +35,30 @@ namespace BeastInLabyrinth
         /// <param name="lab"></param>
         /// <param name="matrix"></param>
         /// <param name="beast"></param>
-        static void PrintLabyrinth(Labyrinth lab, char[,] matrix, Beast beast)
+        static void PrintLabyrinth(Labyrinth lab, char[,] matrix, List<Beast> beasts)
         {
-            for (int i = 0; i < lab.Height; i++)
+            // 1️⃣ vytvoříme kopii labyrintu (abychom nepsali přímo do originálu)
+            char[,] temp = new char[lab.Width, lab.Height];
+            for (int y = 0; y < lab.Height; y++)
             {
-                for (int j = 0; j < lab.Width; j++)
+                for (int x = 0; x < lab.Width; x++)
                 {
-                    if (i == beast.Y && j == beast.X)
-                    {
-                        Console.Write(beast.Shape);
-                        continue;
-                    }
-                    Console.Write(matrix[j, i]);
+                    temp[x, y] = matrix[x, y];
+                }
+            }
+
+            // 2️⃣ umístíme beasty do kopie
+            foreach (Beast beast in beasts)
+            {
+                temp[beast.X, beast.Y] = beast.Shape;
+            }
+
+            // 3️⃣ vytiskneme kopii
+            for (int y = 0; y < lab.Height; y++)
+            {
+                for (int x = 0; x < lab.Width; x++)
+                {
+                    Console.Write(temp[x, y]);
                 }
                 Console.WriteLine();
             }
@@ -60,7 +73,7 @@ namespace BeastInLabyrinth
         public int Width { get; }
         public int Height { get; }
         public char[,] labyrinth;
-        public Beast beast;
+        public List<Beast> Beasts { get; }
 
         /// <summary>
         /// Konstruktor třídy Labyrinth
@@ -72,6 +85,7 @@ namespace BeastInLabyrinth
             Width = width;
             Height = height;
             labyrinth = new char[Width, Height];
+            Beasts = new List<Beast>();
         }
 
         /// <summary>
@@ -88,7 +102,8 @@ namespace BeastInLabyrinth
                     // Pokud není momentální znak zeď ani mezera, nastavím objekt beast se souřadnicemi tohoto znaku
                     if (input[j] != 'X' && input[j] != '.')
                     {
-                        beast = new Beast(input[j], j, i);
+                        Beast beast = new Beast(input[j], j, i);
+                        Beasts.Add(beast);
                         // Na místo příšery dám mezeru
                         labyrinth[j, i] = '.';
                         continue;
@@ -103,20 +118,23 @@ namespace BeastInLabyrinth
         /// </summary>
         public void Turn()
         {
-            // Když vpravo není zeď
-            if (!beast.IsToRight(labyrinth))
-                // Pokud je vpravo přede mnou poslední zeď, od které jsem odešel, posunu se k ní (dopředu)
-                // Tahle podmínka je potřeba pro pozici, kdy se potřebuji otočit okolo rohu, takže jsem odešel od té zdi a potřebuji pokračovat podél ní
-                if (beast.IsFrontRightLast(labyrinth))
-                    beast.MoveForward();
-                // Jinak jdu vpřed
+            foreach (Beast beast in Beasts)
+            {
+                // Když vpravo není zeď
+                if (!beast.IsToRight(labyrinth))
+                    // Pokud je vpravo přede mnou poslední zeď, od které jsem odešel, posunu se k ní (dopředu)
+                    // Tahle podmínka je potřeba pro pozici, kdy se potřebuji otočit okolo rohu, takže jsem odešel od té zdi a potřebuji pokračovat podél ní
+                    if (beast.IsFrontRightLast(labyrinth))
+                        beast.MoveForward();
+                    // Jinak jdu vpřed
+                    else
+                        beast.TurnRight();
+                // Pokud je přede mnou stěna, otočím se doleva
+                else if (beast.IsInFront(labyrinth))
+                    beast.TurnLeft();
                 else
-                    beast.TurnRight();
-            // Pokud je přede mnou stěna, otočím se doleva
-            else if (beast.IsInFront(labyrinth))
-                beast.TurnLeft();
-            else
-                beast.MoveForward();
+                    beast.MoveForward();
+            }
         }
     }
 
@@ -204,7 +222,7 @@ namespace BeastInLabyrinth
         public bool IsInFront(char[,] lab)
         {
             // Triviální
-            if (lab[X + forwardMove[orientIndex % 4, 0], Y + forwardMove[orientIndex % 4, 1]] == 'X')
+            if (lab[X + forwardMove[orientIndex % 4, 0], Y + forwardMove[orientIndex % 4, 1]] != '.')
                 return true;
             return false;
         }
