@@ -1,0 +1,92 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fafafa;
+}
+form {
+  background-color: #ffffff;
+  border: 3px solid #f1f1f1;
+  border-radius: 16px;
+  padding:16px;
+  /* 
+  TODO 4: Nastavte velikost formulář na poloviční vůči velikosti okna prohlížeče.
+  */
+  width: 50%;
+  /* 
+  TODO 5: Formulář zarovnejte na střed.
+  */
+  margin: auto;
+  
+}
+
+input[type=email], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+button {
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  display: inline;
+  width:100%;
+}
+
+button:hover { /* jak se chová tlačítko po najetí myši */
+  opacity: 0.8;
+}
+
+.darkmodebtn{
+  float:right;
+  width:auto;
+
+  /* 
+  TODO 6: Nastavte barvu tlačítka na stejnou barvu, jako má pozadí stránky 
+  */
+  background-color: #fafafa;
+  
+  /* 
+  TODO 7: Nastavte zaoblení obdélníku tlačítka tak, aby se z něj stal kruh.
+  */
+  border-radius:100%;
+  /*
+  TODO 8: Nastavte odsazení od obrázku v tlačítku o 8px
+  */
+  padding: 8px;
+
+  /*
+  TODO 9: Nastavte odsazení od kraje stránky o 8px
+  */
+  margin: 8px;
+}
+.darkmodebtn > img{
+  width:30px;
+}
+/*
+TODO 10: Po najetí myší na darkmode tlačítko ztmavne jeho pozadí
+*/
+.darkmodebtn:hover{
+  background-color: #8f8e8e;
+}
+
+
+.cancelbtn {
+  background-color: #f44336;
+}
+.signupbtn{
+  background-color: #04AA6D;
+}
+
+.button-container { 
+  /* pro rovnoměrné rozdělení tlačítek Cancel a Sign Up */
+  display: flex;
+  justify-content: space-between;
+  gap:8px;
+}
+
