@@ -1,0 +1,32 @@
+// Darkmode měnění stylu
+function darkMode(){
+    // tady něco chybí (změňte classList celého těla dokumentu a formuláře - nějaké stylování už je předdělané v CSS souboru)
+    const element = document
+
+    const inputElements = document.getElementsByTagName("input");
+    for (const input of inputElements) {
+        input.classList.toggle("dark-mode");
+    }
+
+    document.body.classList.toggle("dark-mode")
+
+    document.getElementById("form").classList.toggle("dark-mode")
+
+    document.getElementById("darkmodebtn").classList.toggle("dark-mode");
+}
+
+// Ověření stejnosti hesel
+function passwordsMatch() {
+    // tady něco chybí (získejte pwd1 a pwd2)
+    
+    const pwd1 = document.getElementById("pwd")
+    const pwd2 = document.getElementById("pwd-repeat")
+
+    if (pwd1 !== pwd2){
+        document.getElementById("pwd-alert").style.display="block";
+    }
+    else{
+        document.getElementById("pwd-alert").style.display="none";
+    }
+}
+
