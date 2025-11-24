@@ -37,7 +37,7 @@ namespace BeastInLabyrinth
         /// <param name="beast"></param>
         static void PrintLabyrinth(Labyrinth lab, char[,] matrix, List<Beast> beasts)
         {
-            // 1️⃣ vytvoříme kopii labyrintu (abychom nepsali přímo do originálu)
+            // vytvoříme kopii labyrintu (abychom nepsali přímo do originálu)
             char[,] temp = new char[lab.Width, lab.Height];
             for (int y = 0; y < lab.Height; y++)
             {
@@ -47,13 +47,13 @@ namespace BeastInLabyrinth
                 }
             }
 
-            // 2️⃣ umístíme beasty do kopie
+            // umístíme beasty do kopie
             foreach (Beast beast in beasts)
             {
                 temp[beast.X, beast.Y] = beast.Shape;
             }
 
-            // 3️⃣ vytiskneme kopii
+            // vytiskneme kopii
             for (int y = 0; y < lab.Height; y++)
             {
                 for (int x = 0; x < lab.Width; x++)
