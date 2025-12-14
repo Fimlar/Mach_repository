@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PraceSTextovymiSoubory
 {
@@ -104,7 +107,7 @@ namespace PraceSTextovymiSoubory
 
 
             //
-            using (StreamWriter sw = new StreamWriter(@"vstupni_soubory\2.txt"))
+            using (StreamWriter sw = new StreamWriter(@"..\..\..\..\vstupni_soubory\2.txt"))
             {
                 sw.WriteLine("Ahoj \tsvěte!\n");
             }
@@ -112,7 +115,7 @@ namespace PraceSTextovymiSoubory
             // Zkontrolujte s VS Code a vysvětlete rozdíly.
             // Tip: Při Debugování uvidíte všchny čtené znaky.
 
-            using (StreamReader sr = new StreamReader(@"vstupni_soubory\1.txt"))
+            using (StreamReader sr = new StreamReader(@"..\..\..\..\vstupni_soubory\1.txt"))
             {
                 int i = 0;
                 while (true)
@@ -125,7 +128,7 @@ namespace PraceSTextovymiSoubory
                 Console.WriteLine(i);
             }
 
-            using (StreamReader sr = new StreamReader(@"vstupni_soubory\2.txt"))
+            using (StreamReader sr = new StreamReader(@"..\..\..\..\vstupni_soubory\2.txt"))
             {
                 int i = 0;
                 while (true)
@@ -141,7 +144,7 @@ namespace PraceSTextovymiSoubory
             // (10b) 2. Jaký je počet znaků v souboru 1.txt, když pomineme bílé znaky?
             // Tip: Struktura Char má statickou funkci IsWhiteSpace().            
 
-            using (StreamReader sr = new StreamReader(@"vstupni_soubory\1.txt"))
+            using (StreamReader sr = new StreamReader(@"..\..\..\..\vstupni_soubory\1.txt"))
             {
                 int i = 0;
                 while (true)
@@ -159,13 +162,13 @@ namespace PraceSTextovymiSoubory
             }
 
             //
-            using (StreamWriter sw = new StreamWriter(@"vstupni_soubory\4.txt"))
+            using (StreamWriter sw = new StreamWriter(@"..\..\..\..\vstupni_soubory\4.txt"))
             {
                 sw.WriteLine("1");
                 sw.WriteLine("2");
                 sw.WriteLine("3");
             }
-            using (StreamWriter sw = new StreamWriter(@"vstupni_soubory\5.txt"))
+            using (StreamWriter sw = new StreamWriter(@"..\..\..\..\vstupni_soubory\5.txt"))
             {
                 sw.Write("1\n2\n3");
             }
@@ -181,7 +184,7 @@ namespace PraceSTextovymiSoubory
             // Za slovo teď považujme neprázdnou souvislou posloupnost nebílých znaků oddělené bílými.
             // Tip: Split defaultně odděluje na základě libovolných bílých znaků, ale je tam jeden háček.. jaký?
             // V souboru je vidět 52 slov.
-            using (StreamReader sr = new StreamReader(@"vstupni_soubory\1.txt"))
+            using (StreamReader sr = new StreamReader(@"..\..\..\..\vstupni_soubory\1.txt"))
             {
                 int i = 0;
                 char previous = 'a';
@@ -204,16 +207,82 @@ namespace PraceSTextovymiSoubory
             // Vypište obsah souboru do konzole. V čem je u konzole problém a jak ho spravit?
             // Jaké kódování používá C#? Kolik bytů na znak?
 
+            File.WriteAllText(@"..\..\..\..\vstupni_soubory\7.txt", "řeřicha");
+            Console.WriteLine(File.ReadAllText(@"..\..\..\..\vstupni_soubory\7.txt"));
+
+            // vypsalo se mi to správně
+            // C# používá kódování UTF-16 => 32 bitů na znak
 
 
             // (25b) 6. Vypište četnosti jednotlivých slov v souboru 8.txt do souboru 9.txt ve formátu slovo:četnost na samostatný řádek.
             // Tentokrát však slova nejprve očištěte od diakritiky a všechna písmena berte jako malá (tak je i ukládejte do slovníku).
             // Tip: Využijte slovník: Dictionary<string, int> slova = new Dictionary<string, int>();
 
+            Dictionary<string, int> slova = new Dictionary<string, int>();
 
+            string text = File.ReadAllText(@"..\..\..\..\vstupni_soubory\8.txt");
 
+            string[] words = Regex.Split(text, @"[^a-zA-Zá-žÁ-Ž]+");
+
+            foreach (string word in words)
+            {
+                if (string.IsNullOrWhiteSpace(word))
+                    continue;
+
+                // odstranění diakritiky + malé písmo
+                string cleanWord = RemoveDiacritics(word).ToLower();
+
+                if (slova.ContainsKey(cleanWord))
+                    slova[cleanWord]++;
+                else
+                    slova[cleanWord] = 1;
+            }
+
+            // zápis do souboru
+            using StreamWriter writer = new StreamWriter(@"..\..\..\..\vstupni_soubory\9.txt");
+            foreach (var pair in slova)
+            {
+                writer.WriteLine($"{pair.Key}:{pair.Value}");
+            }
+
+            /// <summary>
+            /// Odstraní diakritiku z řetězce
+            /// </summary>
+            static string RemoveDiacritics(string text)
+            {
+                string normalized = text.Normalize(NormalizationForm.FormD);
+                StringBuilder sb = new StringBuilder();
+
+                foreach (char c in normalized)
+                {
+                    if (Char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                        sb.Append(c);
+                }
+
+                return sb.ToString().Normalize(NormalizationForm.FormC);
+            }
             // (+15b) Bonus: Vypište četnosti jednotlivých znaků abecedy (malá a velká písmena) v souboru 8.txt do konzole.
+            text = File.ReadAllText(@"..\..\..\..\vstupni_soubory\8.txt");
 
+            Dictionary<char, int> znaky = new Dictionary<char, int>();
+
+            foreach (char c in text)
+            {
+                // pouze písmena abecedy (malá i velká)
+                if (char.IsLetter(c))
+                {
+                    if (znaky.ContainsKey(c))
+                        znaky[c]++;
+                    else
+                        znaky[c] = 1;
+                }
+            }
+
+            // výpis do konzole
+            foreach (var pair in znaky)
+            {
+                Console.WriteLine($"{pair.Key}: {pair.Value}");
+            }
             #endregion
         }
     }
