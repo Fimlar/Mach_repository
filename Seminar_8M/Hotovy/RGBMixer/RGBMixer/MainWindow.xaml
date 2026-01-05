@@ -32,8 +32,8 @@
             
             <!--Červená-->
             <WrapPanel Grid.Row="1" Orientation="Horizontal">
-                <TextBlock Text="Red" Background="Red" FontSize="26"
-                           Padding="10" Width="100" />
+                <Label Content="Red" Background="Red" FontSize="26"
+                       Padding="10" Width="100"/>
                 <TextBox Margin="20, 0" Width="200" FontSize="26"
                          VerticalContentAlignment="Center" 
                          Text="{Binding R, Mode=TwoWay}"/>
@@ -46,8 +46,8 @@
 
             <!--Zelená-->
             <WrapPanel Grid.Row="3" Orientation="Horizontal">
-                <TextBlock Text="Green" Background="Green" FontSize="26"
-                           Padding="10" Width="100"/>
+                <Label Content="Green" Background="Green" FontSize="26"
+                       Padding="10" Width="100"/>
                 <TextBox Margin="20, 0" Width="200" FontSize="26"
                          VerticalContentAlignment="Center"
                          Text="{Binding G, Mode=TwoWay}"/>
@@ -60,8 +60,8 @@
 
             <!--Modrá-->
             <WrapPanel Grid.Row="5" Orientation="Horizontal">
-                <TextBlock Text="Blue" Background="Blue" FontSize="26"
-                            Padding="10" Width="100"/>
+                <Label Content="Blue" Background="Blue" FontSize="26"
+                       Padding="10" Width="100"/>
                 <TextBox Margin="20, 0" Width="200" FontSize="26"
                          VerticalContentAlignment="Center"
                          Text="{Binding B, Mode=TwoWay}"/>  

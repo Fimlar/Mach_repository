@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace RGBMixer
@@ -28,6 +29,11 @@ namespace RGBMixer
             get => r;
             set
             {
+                if (value < 0 || value > 255)
+                {
+                    MessageBox.Show("Zadej hodnotu v platném rozsahu");
+                    return;
+                }
                 r = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Color));
