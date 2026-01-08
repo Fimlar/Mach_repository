@@ -23,5 +23,10 @@ namespace RGBMixer
             InitializeComponent();
             DataContext = new MainWindowViewModel();
         }
+
+        private void Slider_ValueChanged()
+        {
+
+        }
     }
 }
