@@ -1,0 +1,51 @@
+﻿<Window x:Class="Malovani.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Malovani"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        
+        <!--Menu-->
+        <Menu>
+            <MenuItem Header="Soubor">
+                <MenuItem Header="Otevřít" Name="openBtn" Click="openBtn_Click"/>
+                <MenuItem Header="Uložit" Name="saveBtn" Click="saveBtn_Click"/>
+            </MenuItem>
+            <MenuItem Header="Upravit"/>
+        </Menu>
+
+        <!--Štětec-->
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Image Source="/brush.png"/>
+            <Label>Tloušťka štětce</Label>
+            <Slider Width="100" VerticalAlignment="Center"
+                    Name="widthSlider" ValueChanged="widthSlider_ValueChanged"
+                    Minimum="1" Maximum="20" Value="5"/>
+            <Label>Barva</Label>
+            <Button Background="Black" Width="30" Name="colorBtn"
+                    Click="colorBtn_Click"/>
+        </StackPanel>
+        
+        <!--Plátno-->
+        <Canvas Grid.Row="2" Name="drawingCanvas" MouseMove="drawingCanvas_MouseMove"
+                MouseDown="drawingCanvas_MouseDown" MouseUp="drawingCanvas_MouseUp"
+                Background="White"/>
+
+
+        <!--Zoom-->
+        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right">
+            <Label Content="0%"/>
+            <Slider Width="100" VerticalAlignment="Center"/>
+            <Label Content="100%"/>
+        </StackPanel>
+    </Grid>
+</Window>
