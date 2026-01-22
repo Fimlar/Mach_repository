@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace MVVMProject
+namespace ToDoList
 {
     /// <summary>
     /// Interaction logic for App.xaml

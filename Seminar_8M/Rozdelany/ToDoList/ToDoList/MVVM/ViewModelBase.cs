@@ -6,13 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVMProject.MVVM
+namespace ToDoList.MVVM
 {
-    internal class ViewModelBase : INotifyPropertyChanged
+    internal class ViewModelBase
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
