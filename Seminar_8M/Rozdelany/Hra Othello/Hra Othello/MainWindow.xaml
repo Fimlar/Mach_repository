@@ -1,0 +1,66 @@
+﻿<Window x:Class="Hra_Othello.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hra_Othello"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" MinWidth="500">
+    <Grid>
+        <!--Rozdělení obrazovky podle zadání-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <!--Label a Start tlačítko-->
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical"
+                    HorizontalAlignment="Center" Margin="0, 40, 0, 0">
+            <Label Content="Hra Othello" FontWeight="Bold" FontSize="28"/>
+            <Button Command="{Binding StartGame}" Content="Start Game"
+                    Background="{StaticResource PrimaryBrush}" Foreground="White"/>
+        </StackPanel>
+        
+        <!--Hrací pole-->
+        <Grid Grid.Row="0" Grid.Column="1">
+            <!--Přidávám resourcy na úpravu stylu gridu-->
+            <Grid.Resources>
+                <!--Tohle upravuje border-->
+                <Style x:Key="CellBorderStyle" TargetType="Border">
+                    <Setter Property="BorderBrush"
+                            Value="{StaticResource SecondaryBrush}"/>
+                    <Setter Property="BorderThickness"
+                            Value="1"/>
+                    <Setter Property="Padding" Value="8"/>
+                </Style>
+            </Grid.Resources>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--Barvy na využití-->
+    <Color x:Key="PrimaryColor">Green</Color>
+    <Color x:Key="SecondaryColor">ForestGreen</Color>
+    <!--Brushe z barev-->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+</ResourceDictionary>
