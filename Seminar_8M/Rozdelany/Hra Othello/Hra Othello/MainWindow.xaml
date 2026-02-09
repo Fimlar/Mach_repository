@@ -6,6 +6,18 @@
         xmlns:local="clr-namespace:Hra_Othello"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" MinWidth="500">
+    <!--Přidám resource na úpravu stylů v tomto okně-->
+    <Window.Resources>
+        <Style x:Key="CellBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        </Style>
+        <Style x:Key="RectangleDashedBorderStyle" TargetType="Rectangle">
+            <Setter Property="StrokeDashArray" Value="2 2"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <!--Rozdělení obrazovky podle zadání-->
         <Grid.ColumnDefinitions>
@@ -16,51 +28,36 @@
             <RowDefinition Height="9*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        
+
         <!--Label a Start tlačítko-->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical"
                     HorizontalAlignment="Center" Margin="0, 40, 0, 0">
             <Label Content="Hra Othello" FontWeight="Bold" FontSize="28"/>
-            <Button Command="{Binding StartGame}" Content="Start Game"
+            <Button Command="{Binding StartCommand}" Content="Start Game"
                     Background="{StaticResource PrimaryBrush}" Foreground="White"/>
         </StackPanel>
-        
+
         <!--Hrací pole-->
-        <Grid Grid.Row="0" Grid.Column="1">
-            <!--Přidávám resourcy na úpravu stylu gridu-->
-            <Grid.Resources>
-                <!--Tohle upravuje border-->
-                <Style x:Key="CellBorderStyle" TargetType="Border">
-                    <Setter Property="BorderBrush"
-                            Value="{StaticResource SecondaryBrush}"/>
-                    <Setter Property="BorderThickness"
-                            Value="1"/>
-                    <Setter Property="Padding" Value="8"/>
-                </Style>
-            </Grid.Resources>
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            
-            
-        </Grid>
+        <ItemsControl Grid.Column="1" ItemsSource="{Binding Cells}">
+            <!--Vytvořím uvnitř UniformGrid-->
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="8" Rows="8"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding DataContext.ClickCommand, 
+                                      RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            CommandParameter="{Binding}"
+                            Background="{Binding CellBrush}"
+                            BorderBrush="Black" BorderThickness="1">
+                        <Ellipse Width="30" Height="30" Fill="White" Visibility="Collapsed"/>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
     </Grid>
 </Window>
