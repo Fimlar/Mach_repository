@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Hra_Othello.Model
 {
@@ -10,11 +11,7 @@ namespace Hra_Othello.Model
     {
         public int Row { get; set; }
         public int Column { get; set; }
-        public bool IsBlack {  get; set; }
 
-        /// <summary>
-        /// Vlastnost určující, jestli daná buňka přísluší nějakému hráči
-        /// </summary>
-        public bool Colored { get; set; }
+        public Brush CellBrush { get; set; }
     }
 }

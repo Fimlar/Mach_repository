@@ -29,6 +29,8 @@ namespace Hra_Othello.ViewModel
         private Brush possibleMoveBrush = Brushes.LightGreen;
 
         private List<CellViewModel> possibleMoves = new List<CellViewModel>();
+        private List<CellViewModel> possibleNeighbours = new List<CellViewModel>();
+
         private readonly (int dx, int dy)[] NeighborOffsets =
         {
             (-1, -1), (0, -1), (1, -1),
@@ -53,27 +55,61 @@ namespace Hra_Othello.ViewModel
                 for (int j = 0; j < 8; j++)
                 {
                     Cell model = new Cell();
-                    Cells.Add(new CellViewModel(model) { Row = i, Column = j, IsBlack = false, CellBrush=Brushes.Green});
+                    Brush brush = Brushes.Green;
+
+                    if (i == 3 && j == 3)
+                        brush = secondPlayerBrush;
+                    else if (i == 3 && j == 4)
+                        brush = firstPlayerBrush;
+                    else if (i == 4 && j == 4)
+                        brush = secondPlayerBrush;
+                    else if (i == 4 && j == 3)
+                        brush = firstPlayerBrush;
+
+                    Cells.Add(new CellViewModel(model)
+                    {
+                        Row = i,
+                        Column = j,
+                        CellBrush = brush
+                    });
                 }
             }
+            ColorPossibleMoves();
         }
 
         private void CellClicked(CellViewModel cell)
         {
+            // pokud kliknu na jiné než možné pole
+            if (cell.CellBrush != possibleMoveBrush)
+                return;
+
+            // Barvím buňky zpět a přebarvuji „ukradené“ buňky
+            // Procházím všechny možné buňky
+            for (int i = 0;i < possibleMoves.Count; i++)
+            {
+                CellViewModel c = possibleMoves[i];
+                // Pokud je zkoumaná buňka ta možná, kterou momentálně prohledávám, přebarvím příslušného souseda
+                if (cell.Row == c.Row && cell.Column == c.Column)
+                {
+                    if (turn)
+                        possibleNeighbours[i].CellBrush = firstPlayerBrush;
+                    else
+                        possibleNeighbours[i].CellBrush = secondPlayerBrush;
+                }
+                c.CellBrush = Brushes.Green;
+            }
+            // Promažu listy s tahy
+            possibleMoves = new List<CellViewModel>();
+            possibleNeighbours = new List<CellViewModel>();
+
             if (turn)
             // Na tahu je první hráč
             {
-                foreach (var neighbour in FindNeighbours(cell).Where(c => c.IsBlack == true))
-                {
-                    neighbour.CellBrush = Brushes.Red;
-                }
-
-                ColorPossibleMoves();
-
                 // Obarvím buňku na barvu prvního hráče
                 cell.CellBrush = firstPlayerBrush;
                 // Nastavím, že je na řadě hráč dva
                 turn = false;
+                ColorPossibleMoves();
             }
             else
             // Na tahu je druhý hráč
@@ -81,29 +117,56 @@ namespace Hra_Othello.ViewModel
                 cell.CellBrush = secondPlayerBrush;
 
                 turn = true;
-            }
-        }
 
-        private IEnumerable<CellViewModel> FindNeighbours(CellViewModel cell)
-        {
-            return Cells.Where(c =>
-                Math.Abs(c.Row - cell.Row) <= 1 &&
-                Math.Abs(c.Column - cell.Column) <= 1 &&
-                c != cell);
+                ColorPossibleMoves();
+            }
         }
 
         private void ColorPossibleMoves()
         {
+            
+            Brush brush1;
+            Brush brush2;
+            // nastavím brush podle toho, kdo je zrovna na řadě
             if (turn)
-            // Na řadě je černý
             {
-                // Najdu všechny černé buňky
-                foreach (var cell in Cells.Where(c => c.IsBlack))
-                    foreach (var dir in NeighborOffsets)
+                brush1 = firstPlayerBrush;
+                brush2 = secondPlayerBrush;
+            }
+
+            else
+            {
+                brush1 = secondPlayerBrush;
+                brush2 = firstPlayerBrush;
+            }
+                
+
+            // Najdu všechny buňky dané barvy
+            foreach (var cell in Cells.Where(c => c.CellBrush == brush1))
+                foreach (var dir in NeighborOffsets)
+                {
+                    int dx = dir.dx;
+                    int dy = dir.dy;
+                    try
                     {
-                        
+                        // soused v tomto směru
+                        CellViewModel nei = Cells.First(c => c.Row == cell.Row + dy && c.Column == cell.Column + dx);
+                        // o jedno dál než soused
+                        CellViewModel nxt = Cells.First(c => c.Row == cell.Row + dy * 2 && c.Column == cell.Column + dx * 2);
+                        if (nei.CellBrush == brush2 && nxt.CellBrush == Brushes.Green)
+                        {
+                            possibleMoves.Add(nxt);
+                            possibleNeighbours.Add(nei);
+                            nxt.CellBrush = possibleMoveBrush;
+                            OnPropertyChanged();
+                        } 
                     }
-            }                 
+                    catch
+                    {
+                        continue;
+                    }
+                }
+            return;
         }
     }
 }

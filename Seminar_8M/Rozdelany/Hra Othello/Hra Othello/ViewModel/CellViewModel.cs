@@ -27,16 +27,5 @@ namespace Hra_Othello.ViewModel
             get { return _cellBrush; }
             set { _cellBrush = value; OnPropertyChanged(); }
         }
-
-
-
-        private bool _isBlack;
-        public bool IsBlack
-        {
-            get { return _isBlack; }
-            set { _isBlack = value; OnPropertyChanged(); }
-        }
-
-
     }
 }
