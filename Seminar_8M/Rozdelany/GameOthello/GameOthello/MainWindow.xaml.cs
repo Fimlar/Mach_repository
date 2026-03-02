@@ -1,4 +1,4 @@
-﻿using Hra_Othello.ViewModel;
+﻿using GameOthello.ViewModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Hra_Othello
+namespace GameOthello
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

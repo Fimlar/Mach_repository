@@ -1,1 +1,0 @@
-Nepochopil jsem pravidla Othella. Můžeš hrát jenom tam, kde je právě jeden kámen mezi nimi.

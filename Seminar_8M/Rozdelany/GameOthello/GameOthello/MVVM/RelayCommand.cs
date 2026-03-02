@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Hra_Othello.MVVM
+namespace GameOthello.MVVM
 {
     internal class RelayCommand : ICommand
     {
