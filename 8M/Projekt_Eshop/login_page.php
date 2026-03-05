@@ -9,7 +9,7 @@
         <button id="darkmodebtn" onclick="darkMode()"><i class="bi bi-moon-fill"></i></button>
         <form id="form" action="login.php" method="post">   
             <!-- action: kam se půjde po sumbit -->
-            <!-- method: jakou metodou se budou posílat data (GET x POST) -->         
+            <!-- method: jakou metodou se budou posílat data ("GET" - veřejně v URL x "POST" - skrytě v HTTP requestu ) -->         
             <h1>Log In</h1>
             <p>Please fill in this form to log in.</p>
             <hr>
@@ -32,6 +32,7 @@
                 echo "<p style='color:red; text-align:center;'>Zadáno špatné heslo.</p>";
             }
         ?>
+        <p style="text-align:center;">If you don't have an account, please <a href="signup_page.php">sign up</a>.</p>
         <script src="myScript.js"></script>
     </body>
 </html>

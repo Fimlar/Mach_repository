@@ -13,13 +13,14 @@
             Uživatel uvidí jen prázdné místo místo svého jména, protože server sice data má uložená na disku, ale vy jste mu "neřekli", aby tu skříňku otevřel.
 
     Dává se hned na první řádek HTML dokumentu.
-*/
+    
+    */
 
-// Pokud v session není ID uživatele, pošli ho zpět na login
-if (!isset($_SESSION["id"])) {
-    header("Location: login.php");
-    exit();
-}
+    // Pokud v session není ID uživatele, pošli ho zpět na login
+    if (!isset($_SESSION["id"])) {
+        header("Location: login.php");
+        exit();
+    }
 ?>
 
 
@@ -36,18 +37,8 @@ if (!isset($_SESSION["id"])) {
     <?php 
         echo $_SESSION["first-name"] . " " . $_SESSION["last-name"];
     ?></h1>
-    <!-- tohle je jen pro efekt.. -->
+    <!-- tohle je jen pro ohňostrojový efekt.. -->
     <div class="firework-container">
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
-        <div class="firework"></div>
         <div class="firework"></div>
         <div class="firework"></div>
         <div class="firework"></div>

@@ -1,6 +1,6 @@
 <?php
 $server = "localhost";
-$database = "01_eshop";   // název databáze, kterou máme vytvořenou v DBeaver
+$database = "8mmacheshop";   // název databáze, kterou máme vytvořenou v DBeaver
 $username = "root";     // výchozí uživatel v XAMPP (je potřeba v XAMPP spustit MySQL)
 $password = "";         // v XAMPP root standardně nemá heslo
 
