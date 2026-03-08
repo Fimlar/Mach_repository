@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace Backtracking_Mince
 {
@@ -10,14 +11,27 @@ namespace Backtracking_Mince
     {
         static void Main(string[] args)
         {
-            Input();
-        }
+            CoinsBacktrack coinsBackTrack = new CoinsBacktrack();
 
-        static void Input()
+            coinsBackTrack.Input();
+
+            Console.ReadLine();
+        }
+    }
+    class CoinsBacktrack
+    {
+        public int N = -1;
+        private List<int> values = new List<int>();
+
+
+        /// <summary>
+        /// Funkce pro načtení inputu z konzole
+        /// </summary>
+        public void Input()
         {
             string[] input = Console.ReadLine().Split(' ');
-            List<int> numbers = new List<int>();
 
+            // Získám hodnoty mincí
             foreach (string part in input)
             {
                 if (!int.TryParse(part, out int value))
@@ -32,24 +46,37 @@ namespace Backtracking_Mince
                     return;
                 }
 
-                numbers.Add(value);
+                values.Add(value);
             }
 
-            numbers.Sort();
-            numbers.Reverse();
+            values.Sort();
+            values.Reverse();
 
-            int n;
             string x = Console.ReadLine();
 
-            if (!int.TryParse(x, out n))
+            // Získám hledanou sumu
+            if (!int.TryParse(x, out N))
             {
                 Console.WriteLine("Zadej platné číslo");
                 return;
             }
-            if (n<0)
+            if (N < 0)
             {
                 Console.WriteLine("Zadej kladné číslo");
                 return;
+            }
+
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void BackTrack(int drag)
+        {
+            foreach (int i in values)
+            {
+
             }
         }
     }
