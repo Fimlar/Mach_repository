@@ -1,0 +1,189 @@
+:root{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  background: #000; /* Noční obloha */
+  margin: 0;
+  color:white;
+}
+
+/*Header*/
+header{
+    margin:0;
+    padding: 20px;
+    color: white;   
+    text-align: center;
+    background-color:#1a2d2d;
+}
+
+#logo{
+    width:60px;
+}
+
+/*Menu*/
+.menu{
+    list-style: none;
+    background-color: #1b2727;
+    margin:0;
+    font-size: large;
+    text-align: center;
+    padding: 0;
+}
+.menu li{
+    padding: 10px;
+    display: inline-block;
+    cursor:pointer;
+}
+.menu li:hover{
+    background-color: #264141;
+}
+.menu li a{
+    text-decoration: none;
+    color: white;
+}
+
+/* STYLOVÁNÍ MAIN PAGE */
+
+.welcome{
+    z-index: 1;
+    text-align: center;
+    color:white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.firework-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Definice samotného ohňostroje */
+.firework {
+  position: absolute;
+  width: 5px;
+  aspect-ratio: 1;
+  /* Vytvoření částic pomocí gradientu */
+  background: 
+    radial-gradient(circle, #ff0 0.2vmin, #0000 0) 50% 0%,
+    radial-gradient(circle, #ff0 0.3vmin, #0000 0) 0% 50%,
+    radial-gradient(circle, #ff0 0.5vmin, #0000 0) 50% 99%,
+    radial-gradient(circle, #ff0 0.2vmin, #0000 0) 99% 50%,
+    radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 80%,
+    radial-gradient(circle, #ff0 0.5vmin, #0000 0) 20% 20%;
+  background-size: 0.5vmin 0.5vmin;
+  background-repeat: no-repeat;
+  animation: firework-animation 2s infinite;
+}
+
+/* Druhá a třetí rachejtle s jiným časováním a barvou */
+.firework:nth-child(2) {
+  left: 30%;
+  top: 40%;
+  animation-delay: -0.5s;
+  filter: hue-rotate(120deg); /* Změna barvy na zelenou */
+}
+
+.firework:nth-child(3) {
+  left: 70%;
+  top: 30%;
+  animation-delay: -1.2s;
+  filter: hue-rotate(250deg); /* Změna barvy na modrou/fialovou */
+}
+
+@keyframes firework-animation {
+  0% { 
+    transform: translate(0, 100vh); /* Start dole */
+    width: 0.5vmin; 
+    opacity: 1;
+  }
+  50% { 
+    width: 0.5vmin; 
+    opacity: 1;
+  }
+  100% { 
+    width: 45vmin; /* Rozprsknutí do šířky */
+    opacity: 0;    /* Zmizení */
+    transform: translate(0, -20vh); /* Výlet nahoru */
+  }
+}
+
+
+/* STYLOVÁNÍ PRODUCTS */
+
+.products-header{
+    text-align: center;
+}
+
+.products-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:20px;
+    margin: 20px 10%;
+}
+
+.item{
+    background-color: #1a2d2d;
+    border-radius: 16px;;
+    border: 1px solid #131b1b;
+    cursor: pointer;
+    margin:20px;
+    text-align: center;
+}
+.sold-out{
+    filter: grayscale(1);
+    cursor: auto;
+}
+.item img{
+    width:100%;
+  height: 150px;      /* výška čtverce */
+  object-fit: cover;  /* zachová proporce a ořízne přebytek */
+  object-position: center; /* střed obrázku zůstane viditelný */
+    display: block;
+
+   border-radius: 16px 16px 0 0;
+}
+
+.item-text{
+    padding:20px;
+    color:white;
+}
+.item:hover{
+    animation: moveUpDown 1s ease-in-out;
+}
+.sold-out:hover{
+    animation:none;
+}
+@keyframes moveUpDown {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.sale{
+    background-color: #ff0;
+    color:#131b1b;
+    margin-bottom: 0;
+    border-radius: 0 0 16px 16px;
+    padding:5px;
+}
+
+
+/* STYLOVÁNÍ REVIEWS */
+.review{
+    background-color: #1a2d2d;
+    border-radius: 16px;;
+    border: 1px solid #131b1b;
+    margin:20px 10%;
+    color:white;
+    padding:20px;
+}
+
+.review-text{
+    font-style: italic;
+}
+
+.stars{
+    color:#ff0;
+}
