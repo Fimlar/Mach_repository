@@ -31,4 +31,5 @@ $sql = "INSERT INTO users (FirstName, LastName, Email, Newsletter, Password)
 
 $result = $conn->query($sql);
 
+Header("Location:login_page.php");
 ?>
