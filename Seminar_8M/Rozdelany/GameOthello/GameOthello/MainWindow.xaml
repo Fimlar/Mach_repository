@@ -6,6 +6,10 @@
         xmlns:local="clr-namespace:GameOthello"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+    
     <Grid>
         <!--Rozdělení obrazovky podle zadání-->
         <Grid.ColumnDefinitions>
@@ -36,11 +40,37 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Command="{Binding DataContext.ClickCommand, 
-                                        RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                      RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                             CommandParameter="{Binding}"
-                            Background="Green"/>
+                            >
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Green"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding State}" Value="FirstPlayer">
+                                        <Setter Property="Background" Value="Black"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding State}" Value="SecondPlayer">
+                                        <Setter Property="Background" Value="White"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding State}" Value="Playable">
+                                        <Setter Property="Background" Value="LightGreen"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <Label Content="Hra začala"
+               Visibility="{Binding IsGameRunning, Converter={StaticResource BoolToVis}}"
+               Grid.Row="1"
+               Grid.ColumnSpan="2"
+               HorizontalAlignment="Center"
+               FontSize="26"/>
     </Grid>
 </Window>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace GameOthello.ViewModel
 {
@@ -17,8 +18,8 @@ namespace GameOthello.ViewModel
             _model = model;
         }
 
-        public int Column => _model.Column;
-        public int Row => _model.Row;
+        public int Column { get; set; }
+        public int Row { get; set; }
 
         private CellState _state;
 
@@ -31,10 +32,8 @@ namespace GameOthello.ViewModel
                 {
                     _model.State = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(Color));
                 }
             }
         }
-
     }
 }
