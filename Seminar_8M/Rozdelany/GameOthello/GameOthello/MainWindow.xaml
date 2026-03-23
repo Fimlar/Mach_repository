@@ -66,11 +66,10 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Label Content="Hra začala"
-               Visibility="{Binding IsGameRunning, Converter={StaticResource BoolToVis}}"
+        <Label Content="{Binding StatusMessage}"
                Grid.Row="1"
                Grid.ColumnSpan="2"
                HorizontalAlignment="Center"
-               FontSize="26"/>
+               FontSize="20"/>
     </Grid>
 </Window>
