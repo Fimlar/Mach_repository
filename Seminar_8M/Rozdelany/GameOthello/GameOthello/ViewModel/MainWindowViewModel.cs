@@ -15,10 +15,11 @@ namespace GameOthello.ViewModel
 {
     internal class MainWindowViewModel : ViewModelBase
     {
+        #region Definice proměnných
         /// <summary>
         /// Kontroluje jestli hra již začala
         /// </summary>
-		private bool _isGameRunning;
+        private bool _isGameRunning;
 		public bool IsGameRunning
 		{
 			get { return _isGameRunning; }
@@ -48,13 +49,6 @@ namespace GameOthello.ViewModel
             (-1,  0),          (1,  0),
             (-1,  1), (0,  1), (1,  1),
         };
-
-        /// <summary>
-        /// Příkaz, který spustí metodu StartGame
-        /// </summary>
-        public RelayCommand StartCommand => new RelayCommand(execute => StartGame(), canExecute => !_isGameRunning);
-        public RelayCommand ClickCommand => new RelayCommand(param => CellClicked((CellViewModel)param));
-
         /// <summary>
         /// Kolekce buněk pro zobrazení
         /// </summary>
@@ -76,6 +70,14 @@ namespace GameOthello.ViewModel
         private CellState turn = CellState.FirstPlayer;
 
         private bool previous = false;
+
+        #endregion
+
+        /// <summary>
+        /// Příkaz, který spustí metodu StartGame
+        /// </summary>
+        public RelayCommand StartCommand => new RelayCommand(execute => StartGame(), canExecute => !_isGameRunning);
+        public RelayCommand ClickCommand => new RelayCommand(param => CellClicked((CellViewModel)param));
         public MainWindowViewModel()
         {
             _isGameRunning = false;
@@ -126,23 +128,28 @@ namespace GameOthello.ViewModel
                 StatusMessage = "Sem hrát nemůžeš.";
                 return;
             }
-                
+
 
             // Přidáme danou buňku hráči na řadě
             cell.State = turn;
-            // Zjistíme index kliknuté buňky v listu playables
-            int index = playables.IndexOf(cell);
-            // Zkopíruji cestu příslušící kliknuté buňce
-            List<CellViewModel> currentPath = paths[index];
-            
-            // Všechny buňky v cestě dám momentálnímu hráči
-            foreach (CellViewModel path in currentPath)
+
+            for (int i = 0; i < playables.Count(); i++)
             {
-                path.State = turn;
+                if (playables[i] == cell)
+                {
+                    // Zkopíruji cestu příslušící kliknuté buňce
+                    List<CellViewModel> currentPath = paths[i];
+                    // Všechny buňky v cestě dám momentálnímu hráči
+                    foreach (CellViewModel path in currentPath)
+                    {
+                        path.State = turn;
+                    }
+                }
             }
             ChangePlayer();
-            
+            ColorPossibleMoves();
         }
+
         /// <summary>
         /// Metoda, která obarví buňky do kterých je možné hrát
         /// </summary>
@@ -151,21 +158,35 @@ namespace GameOthello.ViewModel
             paths.Clear();
             playables.Clear();
             FindPossibleMoves();
-            if (playables.Count == 0)
+
+            if (playables.Count > 0)
             {
-                if (previous)
-                    CheckWin();
-                previous = true;
-                ChangePlayer();
+                // Hráč má tahy -> zobrazíme je a vynulujeme "příznak přeskočení"
+                foreach (CellViewModel cell in playables)
+                    cell.State = CellState.Playable;
+
+                previous = false;
             }
             else
             {
-                // Nastavím všem možným buňkám stav na Playable
-                foreach (CellViewModel cell in playables)
-                    cell.State = CellState.Playable;
-                previous = false;
+                // Aktuální hráč NEMÁ tah
+                if (previous)
+                {
+                    // Pokud ani ten předchozí neměl tah tak končíme
+                    Winner();
+                    IsGameRunning = false; // Tlačítko Start se může znovu aktivovat
+                    return;
+                }
+
+                // Pokud je to první hráč v řadě, který nemá tah:
+                previous = true;
+                StatusMessage = $"{(turn == CellState.FirstPlayer ? "Černý" : "Bílý")} nemá tah, přeskakuji!";
+
+                ChangePlayer();
+                ColorPossibleMoves();
             }
         }
+
         /// <summary>
         /// Metoda, která najde všechny možné tahy (a uloží je do 'playables' a cesty k nim do 'paths'
         /// </summary>
@@ -199,14 +220,14 @@ namespace GameOthello.ViewModel
                         if (nei is null )
                             break;
                         // Pokud jsem narazil na prázdnou buňku, tak uložím konečnou buňky, uložím cestu k ní a skončím
-                        if (nei.State == CellState.NotFound)
+                        if (nei.State == CellState.NotFound || nei.State == CellState.Playable)
                         {
                             playables.Add(nei);
                             paths.Add(new List<CellViewModel>(temporary));
                             break;
                         }
                         // Pokud narazím na mojí buňku nebo buňku kterou už jsem našel, tak končím
-                        else if (nei.State == turn || nei.State == CellState.Playable)
+                        else if (nei.State == turn)
                             break;
                         // Pokud narazím na cizí buňku, tak ji přidám do cesty
                         else
@@ -218,10 +239,11 @@ namespace GameOthello.ViewModel
                 }
             }
         }
+
         /// <summary>
-        /// Metoda, která kontroluje výhru
+        /// Metoda, která zjistí vítěze či remízu
         /// </summary>
-        private void CheckWin()
+        private void Winner()
         {
             int p1 = Cells.Count(c => c.State == CellState.FirstPlayer);
             int p2 = Cells.Count(c => c.State == CellState.SecondPlayer);
@@ -230,6 +252,10 @@ namespace GameOthello.ViewModel
             else if (p2 > p1) StatusMessage = $"Vítězí bílý! ({p2}:{p1})";
             else StatusMessage = "Remíza!";
         }
+
+        /// <summary>
+        /// Metoda na změnění toho kdo je na tahu
+        /// </summary>
         private void ChangePlayer()
         {
             // Změním tah na druhého hráče
@@ -249,8 +275,6 @@ namespace GameOthello.ViewModel
             {
                 random.State = CellState.NotFound;
             }
-
-            ColorPossibleMoves();
         }
     }
 }

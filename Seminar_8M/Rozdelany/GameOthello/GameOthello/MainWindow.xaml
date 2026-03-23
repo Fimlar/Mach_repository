@@ -6,10 +6,6 @@
         xmlns:local="clr-namespace:GameOthello"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-    </Window.Resources>
-    
     <Grid>
         <!--Rozdělení obrazovky podle zadání-->
         <Grid.ColumnDefinitions>
@@ -29,6 +25,7 @@
             Background="Green" Foreground="White"/>
         </StackPanel>
 
+        <!--ItemsControl pro práci s Gridem-->
         <ItemsControl Grid.Column="1" ItemsSource="{Binding Cells}">
             <!--Vytvořím uvnitř UniformGrid-->
             <ItemsControl.ItemsPanel>
@@ -37,12 +34,14 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 
+            <!--Nastavení toho, jak se mají chovat věci uvnitř Gridu-->
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
+                    <!--Uvnitř jsou tlačítka-->
                     <Button Command="{Binding DataContext.ClickCommand, 
                                       RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                            CommandParameter="{Binding}"
-                            >
+                            CommandParameter="{Binding}">
+                        <!--Nastavíme tlačítkům příslušné styly, aby se barvily tak jak chceme-->
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="Green"/>
@@ -61,11 +60,11 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
+        <!--Informativní label, který je napojený na ViewModel-->
         <Label Content="{Binding StatusMessage}"
                Grid.Row="1"
                Grid.ColumnSpan="2"
