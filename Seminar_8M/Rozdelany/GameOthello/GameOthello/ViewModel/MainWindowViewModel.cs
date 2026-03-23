@@ -45,6 +45,10 @@ namespace GameOthello.ViewModel
         /// </summary>
         public ObservableCollection<CellViewModel> Cells { get; } = new ObservableCollection<CellViewModel>();
 
+        private List<List<CellViewModel>> results = new List<List<CellViewModel>>();
+
+        private List<CellViewModel> playables = new List<CellViewModel>();
+
         /// <summary>
         /// Proměnná ukládající kdo je právě na řadě
         /// </summary>
@@ -97,19 +101,42 @@ namespace GameOthello.ViewModel
                 {
                     int dx = dir.dx;
                     int dy = dir.dy;
-                    try
+                    // Podívám se na první buňky v hledaném směru a zjistím, jestli je opačné barvy
+                    CellViewModel? nei = Cells.FirstOrDefault(c => c.Row == cell.Row + dy && c.Column == cell.Column + dx && c.State != CellState.NotFound &&
+                                                                                                                   c.State != CellState.Playable &&
+                                                                                                                   c.State != turn);
+                    // proměnná na posouvání ve směru
+                    int i = 2;
+                    // List, do kterého ukládám již projité buňky v tomto bloku
+                    List<CellViewModel> temporary = new List<CellViewModel>();
+
+                    // Pokud buňka odpovídá, tak pokračuji v projíždění daným směrem
+                    if (nei != null)
                     {
-                        // soused v tomto směru
-                        CellViewModel nei = Cells.First(c => c.Row == cell.Row + dy && c.Column == cell.Column + dx && c.State != CellState.NotFound
-                                                                                                                    && c.State != CellState.Playable
-                                                                                                                    && c.State != turn);
-                        // o jedno dál než soused
-                        CellViewModel nxt = Cells.First(c => c.Row == cell.Row + dy * 2 && c.Column == cell.Column + dx * 2);
+                        while (true)
+                        {
+                            // Najdu další buňku
+                            nei = Cells.FirstOrDefault(c => c.Row == cell.Row + i*dy && c.Column == cell.Column + i*dx);
+                            
+                            // Pokud jsem narazil na prázdnou buňku, tak uložím projité buňky, uložím konečnou a skončím
+                            if (nei.State == CellState.NotFound)
+                            {
+                                playables.Add(nei);
+                                results.Add(temporary);
+                                break;
+                            }
+                            else if(nei.State == turn || nei.State == CellState.Playable)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                temporary.Add(nei);
+                                i++;
+                            }
+                        }
                     }
-                    catch
-                    {
-                        continue;
-                    }
+
                 }
             }
         }
