@@ -187,3 +187,61 @@ header{
 .stars{
     color:#ff0;
 }
+
+#writeReview {
+  background-color: #1a2d2d;
+  border: 3px solid #000;
+  margin:auto;
+  width:50%;
+  border-radius: 16px;
+  padding:16px;
+}
+#writeReview input[type=text]{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #000;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #1a2d2d;
+}
+
+#writeReview button[type="submit"]{
+  background-color: #1a2d2d;
+  color: #fff;
+  margin: 10px 0px;
+}
+
+#writeReview select, #filtersForm select{
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #1a2d2d;
+  font-size: 16px;
+  color: #fff;
+}
+
+#filtersForm{
+  background-color: #1a2d2d;
+  border: 3px solid #000;
+  margin:auto;
+  width:20%;
+  border-radius: 16px;
+  padding:16px;
+  display: flex;  
+  justify-content: center;
+  flex-direction: column;
+  gap:10px;
+}
+
+#filtersForm select{
+  width: 70%;
+  text-align: center;
+  border-radius: 16px;
+  align-self: center;
+}

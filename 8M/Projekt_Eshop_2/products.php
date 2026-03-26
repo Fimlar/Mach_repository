@@ -5,6 +5,23 @@ include "header.html"; // vložení e-shopové hlavičky s navigačním menu
 <h1 class="products-header">Naše nabídka</h1>
 <h2 class="products-header">Řazení a filtry zboží</h2>
 
+<form id="filtersForm">
+    <select name="categories">
+        <option value="all_categories">Všechny Kategorie</option>
+        <?php
+            $sql = "SELECT * FROM categories";
+            $result = $conn->query($sql);
+
+            while ($item = $result->fetch_assoc()){
+                echo "<option value={$item['Name']}>{$item['Name']}</option>";
+            }
+        ?>
+    </select>
+    <select>
+        <option value="no">Žádné řazení</option>
+    </select>
+</form>
+
 <div class="products-grid">
     <?php
         $sql = "SELECT * FROM Items";

@@ -2,17 +2,15 @@
 include "header.html";
 include "db.php";
 ?>
-    <link rel="stylesheet" href="styles_js.css"> <!-- Zde propojíme s CSS souborem. -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css ">
 
     <!--Formulář na recenze-->
-    <form id="form" action="reviewForm.php" method="post">
+    <form id="writeReview" action="reviewForm.php" method="post">
         <label>Write a new review</label>
         <input type="text" placeholder="Write a review" name="review">
 
-        <label>Stars rating</label>
+        <label>Stars rating</label> </br>
         <select name="stars" id="stars">
-            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+            <option value="5">⭐⭐⭐⭐⭐     (5/5)</option>
             <option value="4">⭐⭐⭐⭐ (4/5)</option>
             <option value="3">⭐⭐⭐ (3/5)</option>
             <option value="2">⭐⭐ (2/5)</option>
