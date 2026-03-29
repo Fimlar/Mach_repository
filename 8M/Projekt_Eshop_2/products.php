@@ -5,7 +5,7 @@ include "header.html"; // vložení e-shopové hlavičky s navigačním menu
 <h1 class="products-header">Naše nabídka</h1>
 <h2 class="products-header">Řazení a filtry zboží</h2>
 
-<form id="filtersForm">
+<form class="filtersForm" action="productsForm.php" method="post">
     <select name="categories">
         <option value="all_categories">Všechny Kategorie</option>
         <?php
@@ -17,9 +17,21 @@ include "header.html"; // vložení e-shopové hlavičky s navigačním menu
             }
         ?>
     </select>
-    <select>
+    <select name="order">
         <option value="no">Žádné řazení</option>
+        <option value="ascending">Seřadit od nejlevnějšího</option>
+        <option value="descending">Seřadit od nejdražšího</option>
     </select>
+
+    <label class="checkbox-container" name="stock">
+        <span>Zobrazit pouze položky skladem?</span>
+        <input type="checkbox">
+    </label>
+
+    <div>
+        <button type="submit">Send</button>
+        <!-- Nutné zde dát type="sumbit" jako signál pro vyhodnocení formuláře (pomocí action a method)-->
+    </div>
 </form>
 
 <div class="products-grid">

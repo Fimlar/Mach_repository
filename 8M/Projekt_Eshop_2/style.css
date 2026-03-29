@@ -213,7 +213,7 @@ header{
   margin: 10px 0px;
 }
 
-#writeReview select, #filtersForm select{
+#writeReview select, .filtersForm select{
   width: 50%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -224,9 +224,16 @@ header{
   background-color: #1a2d2d;
   font-size: 16px;
   color: #fff;
+  /*Tohle dělám, abych mohl změnit, jak se zabarví šipka při hoveru*/
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ccc%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px;
 }
 
-#filtersForm{
+.filtersForm{
   background-color: #1a2d2d;
   border: 3px solid #000;
   margin:auto;
@@ -239,9 +246,86 @@ header{
   gap:10px;
 }
 
-#filtersForm select{
+.filtersForm select{
   width: 70%;
   text-align: center;
   border-radius: 16px;
   align-self: center;
+}
+
+#writeReview select:hover, .filtersForm select:hover{
+  background-color: #1a2d2d;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  align-self: center;
+}
+
+/*Tady předělávám input tlačítko, aby mohlo mít hezký pozadí (je to AI, protože fakt netušim co všechno má od základu checkbox)*/
+.checkbox-container input{
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: #1a2d2d; 
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.checkbox-container input:hover{
+  border-color: #fff;
+  background-color: #253d3d;
+}
+
+.checkbox-container input::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em #fff; 
+  
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.checkbox-container input:checked::before {
+  transform: scale(1);
+}
+
+/*Tohle styluje tlačítko*/
+.filtersForm div {
+  display: flex;
+  justify-content: center; 
+  margin-top: 15px;       
+}
+
+.filtersForm button[type="submit"] {
+  background-color: #007bff; 
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 70%;              
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.filtersForm button[type="submit"]:hover {
+  background-color: #0056b3; 
+}
+
+.filtersForm button[type="submit"]:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

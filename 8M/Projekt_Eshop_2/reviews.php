@@ -18,9 +18,9 @@ include "db.php";
         </select>
 
         <div>
-                <button type="submit">Send</button>
-                <!-- Nutné zde dát type="sumbit" jako signál pro vyhodnocení formuláře (pomocí action a method)-->
-            </div>
+            <button type="submit">Send</button>
+            <!-- Nutné zde dát type="sumbit" jako signál pro vyhodnocení formuláře (pomocí action a method)-->
+        </div>
     </form>
     <!--Zobrazení recenzí-->
     <?php
