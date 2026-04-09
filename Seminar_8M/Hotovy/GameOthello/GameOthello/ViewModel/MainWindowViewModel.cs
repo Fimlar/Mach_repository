@@ -174,7 +174,7 @@ namespace GameOthello.ViewModel
                 {
                     // Pokud ani ten předchozí neměl tah tak končíme
                     Winner();
-                    IsGameRunning = false; // Tlačítko Start se může znovu aktivovat
+                    // IsGameRunning = false; // Tlačítko Start se může znovu aktivovat (nechci to řešit, protože se nemazali odehraná políčka)
                     return;
                 }
 
