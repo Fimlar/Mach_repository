@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KlepniKrtka"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="Klepni Krtka" Height="1080" Width="1920"
+        Icon="/Pictures/krtek_na_trave.jpg">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -24,18 +25,26 @@
     
         <!--Stack panel na tlačítka vybírání obtížnosti-->
         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="20">
-            <Button Content="Začátečník" FontSize="20" Margin="10"/>
-            <Button Content="Pokročilý" FontSize="20" Margin="10"/>
-            <Button Content="Master" FontSize="20" Margin="10"/>
+            <RadioButton Content="Začátečník" FontSize="20" Margin="10"
+                         IsChecked="{Binding SelectedDifficulty, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Easy}"
+                         Style="{StaticResource {x:Type ToggleButton}}"/>
+            <RadioButton Content="Pokročilý" FontSize="20" Margin="10"
+                         IsChecked="{Binding SelectedDifficulty, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Medium}"
+                         Style="{StaticResource {x:Type ToggleButton}}"/>
+            <RadioButton Content="Master" FontSize="20" Margin="10"
+                         IsChecked="{Binding SelectedDifficulty, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Hard}"
+                         Style="{StaticResource {x:Type ToggleButton}}"/>
             <Button Content="Stop" Command="{Binding StopCommand}" FontSize="20" Margin="10"/>
         </StackPanel>
 
+        <!--Stack panel na tlačítko start a informace o krtcích-->
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" Margin="20" HorizontalAlignment="Center">
             <Button  Content="Start" FontSize="20" Margin="10" Command="{Binding StartCommand}"/>
             <Label Content="Nachtáno krtků" FontSize="26"/>
             <Label Content="{Binding Score}" FontSize="26" HorizontalAlignment="Center"/>
         </StackPanel>
-
+        
+        <!--Label na ukazování zbývajícího času-->
         <Label Grid.Row="2" Grid.Column="1" FontSize="40" Content="{Binding RemainingTime}" HorizontalAlignment="Center"
                VerticalAlignment="Center"/>
 
@@ -49,14 +58,16 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
+                    <!--Nastavení toho, jak budou vypadat jednotlivá tlačítka-->
                     <Button Command="{Binding DataContext.ClickCommand, 
                                      RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                             CommandParameter="{Binding}"
                             Margin="5" 
                             Padding="0"
                             HorizontalContentAlignment="Stretch" 
-                            VerticalContentAlignment="Stretch">
-
+                            VerticalContentAlignment="Stretch"
+                            Cursor="{StaticResource ShovelCursor}">
+                        <!--Nastavení toho, co bude v těch tlačítkách-->
                         <Image Stretch="UniformToFill">
                             <Image.Style>
                                 <Style TargetType="Image">

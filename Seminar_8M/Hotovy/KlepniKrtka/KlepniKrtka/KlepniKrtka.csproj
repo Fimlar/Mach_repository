@@ -11,14 +11,22 @@
   <ItemGroup>
     <None Remove="Pictures\krtek_na_trave.jpg" />
     <None Remove="Pictures\trava.jpg" />
+    <None Remove="Shovel.cur" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Pictures\krtek_na_trave.jpg" />
+    <Resource Include="Pictures\krtek_na_trave.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Pictures\trava.jpg" />
+    <Resource Include="Pictures\trava.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Shovel.cur">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

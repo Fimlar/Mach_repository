@@ -2,8 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:KlepniKrtka"
+             xmlns:vm="clr-namespace:KlepniKrtka.ViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <vm:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+        <Cursor x:Key="ShovelCursor">/Shovel.cur</Cursor>
     </Application.Resources>
 </Application>
