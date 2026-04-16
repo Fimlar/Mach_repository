@@ -20,6 +20,7 @@ namespace KlepniKrtka.ViewModel
         public ObservableCollection<CellViewModel> Cells { get; set; }
         public RelayCommand StartCommand => new RelayCommand(execute => StartGame(), canExecute => _isGameRunning == false);
         public RelayCommand ClickCommand => new RelayCommand(execute => CellClicked(execute as CellViewModel), canExecute => _isGameRunning == true);
+        public RelayCommand StopCommand => new RelayCommand(execute => StopGame(), canExecute => _isGameRunning == true);
 
         private int _score;
 
@@ -29,6 +30,13 @@ namespace KlepniKrtka.ViewModel
             set { _score = value; OnPropertyChanged(); }
         }
 
+        private TimeSpan _remainingTime;
+
+        public TimeSpan RemainingTime
+        {
+            get { return _remainingTime; }
+            set { _remainingTime = value; OnPropertyChanged(); }
+        }
 
 
         // Privátní proměnné pro použití u logiky
@@ -59,13 +67,10 @@ namespace KlepniKrtka.ViewModel
 
             _isGameRunning = true;
 
-            EndTimer();
+            Task logicTask = GameLogicLoop();
+            Task timerTask = EndTimer(20);
 
-            while (_isGameRunning)
-            {
-                ChangeMolePosition();
-                await Task.Delay(1000);
-            }
+            await Task.WhenAll(timerTask, logicTask);
                 
         }
 
@@ -78,7 +83,14 @@ namespace KlepniKrtka.ViewModel
             if (clicked.IsMole)
                 Score++;
         }
-
+        private async Task GameLogicLoop()
+        {
+            while (_isGameRunning)
+            {
+                ChangeMolePosition();
+                await Task.Delay(1000);
+            }
+        }
         private async void ChangeMolePosition()
         {
             rndCell.IsMole = false;
@@ -93,10 +105,29 @@ namespace KlepniKrtka.ViewModel
             rndCell.IsMole = true;
         }
 
-        private async void EndTimer()
+        private async Task EndTimer(int timeToPlay)
         {
-            await Task.Delay(60000);
+            TimeSpan totalTime = TimeSpan.FromSeconds(timeToPlay);  // Čas jak dlouho chci hrát
+            RemainingTime = totalTime;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+
+            while (sw.Elapsed < totalTime && _isGameRunning)
+            {
+                RemainingTime = totalTime - sw.Elapsed;
+                await Task.Delay(10);
+            }
+
+            RemainingTime = TimeSpan.Zero;
             _isGameRunning = false;
+            sw.Stop();
+        }
+
+        private void StopGame()
+        {
+            // Reset všech hodnot
+            _isGameRunning = false;
+            Cells.Clear();
+            Score = 0;
         }
     }
 }

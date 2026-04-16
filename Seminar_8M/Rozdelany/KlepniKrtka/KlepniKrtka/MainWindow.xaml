@@ -27,7 +27,7 @@
             <Button Content="Začátečník" FontSize="20" Margin="10"/>
             <Button Content="Pokročilý" FontSize="20" Margin="10"/>
             <Button Content="Master" FontSize="20" Margin="10"/>
-            <Button Content="Restart" FontSize="20" Margin="10"/>
+            <Button Content="Stop" Command="{Binding StopCommand}" FontSize="20" Margin="10"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" Margin="20" HorizontalAlignment="Center">
@@ -36,7 +36,8 @@
             <Label Content="{Binding Score}" FontSize="26" HorizontalAlignment="Center"/>
         </StackPanel>
 
-        <Label Grid.Row="2" Grid.Column="1" FontSize="30" Content=""/>
+        <Label Grid.Row="2" Grid.Column="1" FontSize="40" Content="{Binding RemainingTime}" HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
 
         <!--Hrací pole-->
         <ItemsControl Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Cells}">
