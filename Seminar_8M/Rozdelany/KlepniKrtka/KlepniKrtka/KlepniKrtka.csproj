@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Pictures\krtek_na_trave.jpg" />
+    <None Remove="Pictures\trava.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Pictures\krtek_na_trave.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Pictures\trava.jpg" />
+  </ItemGroup>
+
+</Project>
